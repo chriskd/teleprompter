@@ -12,27 +12,27 @@
 
     const GUIDES = {
         'build-guide': {
-            file: '/kb/build-guide.md',
+            file: 'kb/build-guide.md',
             title: 'Complete Build Guide'
         },
         'software-setup': {
-            file: '/kb/software-setup.md',
+            file: 'kb/software-setup.md',
             title: 'Software Setup Guide'
         },
         'raspberry-pi-displays': {
-            file: '/kb/raspberry-pi-displays.md',
+            file: 'kb/raspberry-pi-displays.md',
             title: 'Raspberry Pi Display Options'
         },
         'shopping-lists': {
-            file: '/kb/shopping-lists.md',
+            file: 'kb/shopping-lists.md',
             title: 'Shopping Lists by Budget'
         },
         '3d-printed-housings': {
-            file: '/kb/3d-printed-housings.md',
+            file: 'kb/3d-printed-housings.md',
             title: '3D Printed Housings'
         },
         'elgato-comparison': {
-            file: '/kb/elgato-comparison.md',
+            file: 'kb/elgato-comparison.md',
             title: 'DIY vs Elgato Comparison'
         }
     };

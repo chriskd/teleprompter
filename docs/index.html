@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Teleprompter | Build Your Own for 50-77% Less</title>
+    <meta name="description" content="Complete guides for building a professional teleprompter alternative to Elgato for $70-165. Save hundreds with our step-by-step builds.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Scan line overlay for CRT effect -->
+    <div class="scanlines"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo" data-nav="home">
+                <span class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                        <path d="M7 8l3 3-3 3"/>
+                    </svg>
+                </span>
+                <span class="logo-text">DIY<span class="logo-accent">Prompter</span></span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#builds" class="nav-link" data-nav="builds">Builds</a>
+                <a href="#guides" class="nav-link" data-nav="guides">Guides</a>
+                <a href="#comparison" class="nav-link" data-nav="comparison">vs Elgato</a>
+                <a href="#shopping" class="nav-link" data-nav="shopping">Shopping</a>
+                <a href="https://github.com" class="nav-link nav-link-external" target="_blank">
+                    GitHub
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-bg">
+            <div class="hero-grid"></div>
+            <div class="hero-glow"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="rec-dot"></span>
+                <span>OPEN SOURCE BUILD GUIDE</span>
+            </div>
+
+            <h1 class="hero-title">
+                Build Your Own<br>
+                <span class="hero-title-accent">Teleprompter</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Professional-grade teleprompter for <strong>$70-165</strong> instead of $300+.
+                Complete guides, shopping lists, and software setup.
+            </p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value" data-count="77">0</span>
+                    <span class="stat-unit">%</span>
+                    <span class="stat-label">Max Savings</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-value" data-count="4">0</span>
+                    <span class="stat-label">Build Options</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-value" data-count="45">0</span>
+                    <span class="stat-unit">min</span>
+                    <span class="stat-label">Assembly Time</span>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="#builds" class="btn btn-primary">
+                    <span>Choose Your Build</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#comparison" class="btn btn-secondary">
+                    <span>Compare to Elgato</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Teleprompter Preview Animation -->
+        <div class="hero-preview">
+            <div class="prompter-frame">
+                <div class="prompter-header">
+                    <div class="prompter-controls">
+                        <span class="control red"></span>
+                        <span class="control yellow"></span>
+                        <span class="control green"></span>
+                    </div>
+                    <span class="prompter-title">TELEPROMPTER PREVIEW</span>
+                    <span class="prompter-status">
+                        <span class="status-dot"></span>
+                        LIVE
+                    </span>
+                </div>
+                <div class="prompter-screen">
+                    <div class="prompter-text" id="prompterText">
+                        <p>Welcome to your DIY teleprompter project...</p>
+                        <p>This guide will help you build a professional-grade teleprompter for a fraction of the cost.</p>
+                        <p>Choose from four build tiers ranging from ultra-budget to premium quality.</p>
+                        <p>All builds include Raspberry Pi integration for standalone operation.</p>
+                        <p>No computer required during recording - just power on and present!</p>
+                    </div>
+                </div>
+                <div class="prompter-footer">
+                    <span class="speed-indicator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        2.0x
+                    </span>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <span class="time-indicator">00:42</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Build Tiers Section -->
+    <section class="section builds-section" id="builds">
+        <div class="section-header">
+            <span class="section-tag">BUILD OPTIONS</span>
+            <h2 class="section-title">Choose Your Build Tier</h2>
+            <p class="section-desc">Four options from ultra-budget to premium. All deliver professional results.</p>
+        </div>
+
+        <div class="builds-grid">
+            <!-- Build A -->
+            <article class="build-card build-recommended">
+                <div class="build-badge">RECOMMENDED</div>
+                <div class="build-header">
+                    <span class="build-tier">A</span>
+                    <h3 class="build-name">Complete Housing</h3>
+                    <p class="build-tagline">Desview T3 + Pi Zero 2W</p>
+                </div>
+                <div class="build-price">
+                    <span class="price-currency">$</span>
+                    <span class="price-value">149</span>
+                    <span class="price-range">-164</span>
+                </div>
+                <div class="build-savings">
+                    <span class="savings-bar" style="--savings: 50%"></span>
+                    <span class="savings-text">Save 45-50% vs Elgato</span>
+                </div>
+                <ul class="build-features">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Pre-built 70/30 beam splitter housing
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Bluetooth remote included
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        9 lens adapter rings (49-82mm)
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Carry case included
+                    </li>
+                </ul>
+                <div class="build-requirements">
+                    <span class="req-label">No 3D printer needed</span>
+                </div>
+                <a href="#" class="btn btn-build" data-guide="build-guide" data-section="build-a">
+                    View Full Guide
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <!-- Build B -->
+            <article class="build-card">
+                <div class="build-header">
+                    <span class="build-tier">B</span>
+                    <h3 class="build-name">Budget Housing</h3>
+                    <p class="build-tagline">NEEWER X12B + Pi Zero 2W</p>
+                </div>
+                <div class="build-price">
+                    <span class="price-currency">$</span>
+                    <span class="price-value">95</span>
+                    <span class="price-range">-115</span>
+                </div>
+                <div class="build-savings">
+                    <span class="savings-bar" style="--savings: 58%"></span>
+                    <span class="savings-text">Save 53-58% vs Elgato</span>
+                </div>
+                <ul class="build-features">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Budget aluminum housing
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        70/30 HD beam splitter
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        3-in-1 mounting modes
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Remote control included
+                    </li>
+                </ul>
+                <div class="build-requirements">
+                    <span class="req-label">No 3D printer needed</span>
+                </div>
+                <a href="#" class="btn btn-build" data-guide="build-guide" data-section="build-b">
+                    View Full Guide
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <!-- Build C -->
+            <article class="build-card">
+                <div class="build-header">
+                    <span class="build-tier">C</span>
+                    <h3 class="build-name">3D Printed</h3>
+                    <p class="build-tagline">Custom Housing + Pi Zero 2W</p>
+                </div>
+                <div class="build-price">
+                    <span class="price-currency">$</span>
+                    <span class="price-value">85</span>
+                    <span class="price-range">-110</span>
+                </div>
+                <div class="build-savings">
+                    <span class="savings-bar" style="--savings: 72%"></span>
+                    <span class="savings-text">Save 63-72% vs Elgato</span>
+                </div>
+                <ul class="build-features">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Fully customizable design
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Optical beam splitter glass
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Higher resolution display option
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Community STL files
+                    </li>
+                </ul>
+                <div class="build-requirements">
+                    <span class="req-label req-printer">3D printer required</span>
+                </div>
+                <a href="#" class="btn btn-build" data-guide="build-guide" data-section="build-c">
+                    View Full Guide
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+
+            <!-- Build D -->
+            <article class="build-card">
+                <div class="build-header">
+                    <span class="build-tier">D</span>
+                    <h3 class="build-name">Ultra Budget</h3>
+                    <p class="build-tagline">DIY Everything + Pi Zero 2W</p>
+                </div>
+                <div class="build-price">
+                    <span class="price-currency">$</span>
+                    <span class="price-value">70</span>
+                    <span class="price-range">-95</span>
+                </div>
+                <div class="build-savings">
+                    <span class="savings-bar" style="--savings: 77%"></span>
+                    <span class="savings-text">Save 68-77% vs Elgato</span>
+                </div>
+                <ul class="build-features">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Maximum cost savings
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        DIY tinted glass beam splitter
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Picture frame glass technique
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        Full maker experience
+                    </li>
+                </ul>
+                <div class="build-requirements">
+                    <span class="req-label req-printer">3D printer required</span>
+                </div>
+                <a href="#" class="btn btn-build" data-guide="build-guide" data-section="build-d">
+                    View Full Guide
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Guides Section -->
+    <section class="section guides-section" id="guides">
+        <div class="section-header">
+            <span class="section-tag">DOCUMENTATION</span>
+            <h2 class="section-title">Complete Guides</h2>
+            <p class="section-desc">Everything you need from first boot to final assembly.</p>
+        </div>
+
+        <div class="guides-grid">
+            <a href="#" class="guide-card" data-guide="build-guide">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">Build Guide</h3>
+                    <p class="guide-desc">Complete assembly instructions for all four build tiers with wiring diagrams.</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+
+            <a href="#" class="guide-card" data-guide="software-setup">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 17l6-6-6-6"/>
+                        <path d="M12 19h8"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">Software Setup</h3>
+                    <p class="guide-desc">Pi OS installation, teleprompter apps, auto-start configuration, and foot pedal setup.</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+
+            <a href="#" class="guide-card" data-guide="raspberry-pi-displays">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">Display Options</h3>
+                    <p class="guide-desc">Recommended Pi + LCD combinations with brightness, resolution, and price comparisons.</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+
+            <a href="#" class="guide-card" data-guide="3d-printed-housings">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">3D Printed Housings</h3>
+                    <p class="guide-desc">STL files, print settings, filament recommendations, and assembly tips.</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+
+            <a href="#" class="guide-card" data-guide="shopping-lists">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <path d="M3 6h18"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">Shopping Lists</h3>
+                    <p class="guide-desc">Complete parts lists with verified links for each build tier.</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+
+            <a href="#" class="guide-card guide-card-highlight" data-guide="elgato-comparison">
+                <div class="guide-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M18 20V10"/>
+                        <path d="M12 20V4"/>
+                        <path d="M6 20v-6"/>
+                    </svg>
+                </div>
+                <div class="guide-content">
+                    <h3 class="guide-title">vs Elgato Prompter</h3>
+                    <p class="guide-desc">Feature-by-feature comparison showing where DIY wins (and the few places it doesn't).</p>
+                </div>
+                <span class="guide-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="section comparison-section" id="comparison">
+        <div class="section-header">
+            <span class="section-tag">HEAD TO HEAD</span>
+            <h2 class="section-title">DIY vs Elgato Prompter</h2>
+            <p class="section-desc">The Elgato costs $300+, but realistically $450+ with essential accessories.</p>
+        </div>
+
+        <div class="comparison-visual">
+            <div class="comparison-bars">
+                <div class="comparison-item">
+                    <div class="comparison-label">
+                        <span class="comparison-name">Elgato Prompter</span>
+                        <span class="comparison-note">(with pedal & accessories)</span>
+                    </div>
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bar elgato" style="--width: 100%">
+                            <span class="comparison-value">$455</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-item">
+                    <div class="comparison-label">
+                        <span class="comparison-name">Build A: Desview T3</span>
+                    </div>
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bar diy" style="--width: 36%">
+                            <span class="comparison-value">$164</span>
+                        </div>
+                        <span class="comparison-savings">Save $291</span>
+                    </div>
+                </div>
+
+                <div class="comparison-item">
+                    <div class="comparison-label">
+                        <span class="comparison-name">Build B: NEEWER</span>
+                    </div>
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bar diy" style="--width: 31%">
+                            <span class="comparison-value">$140</span>
+                        </div>
+                        <span class="comparison-savings">Save $315</span>
+                    </div>
+                </div>
+
+                <div class="comparison-item">
+                    <div class="comparison-label">
+                        <span class="comparison-name">Build C: 3D Printed</span>
+                    </div>
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bar diy" style="--width: 24%">
+                            <span class="comparison-value">$110</span>
+                        </div>
+                        <span class="comparison-savings">Save $345</span>
+                    </div>
+                </div>
+
+                <div class="comparison-item">
+                    <div class="comparison-label">
+                        <span class="comparison-name">Build D: Ultra Budget</span>
+                    </div>
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bar diy best" style="--width: 21%">
+                            <span class="comparison-value">$95</span>
+                        </div>
+                        <span class="comparison-savings">Save $360</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-features">
+            <div class="feature-compare">
+                <h4 class="feature-compare-title">Where DIY Wins</h4>
+                <ul class="feature-list wins">
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        </span>
+                        <span>Standalone operation (no computer required)</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        </span>
+                        <span>Foot pedal included ($90 extra for Elgato)</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        </span>
+                        <span>Higher resolution display options</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        </span>
+                        <span>Unlimited software customization</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+                        </span>
+                        <span>Portable with USB power bank</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="feature-compare">
+                <h4 class="feature-compare-title">Elgato Advantages</h4>
+                <ul class="feature-list neutral">
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        </span>
+                        <span>Plug and play setup</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        </span>
+                        <span>Stream Deck integration</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        </span>
+                        <span>Commercial warranty</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <a href="#" class="btn btn-primary comparison-cta" data-guide="elgato-comparison">
+            <span>Full Feature Comparison</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </section>
+
+    <!-- Shopping Section Preview -->
+    <section class="section shopping-section" id="shopping">
+        <div class="section-header">
+            <span class="section-tag">QUICK START</span>
+            <h2 class="section-title">Shopping Checklist</h2>
+            <p class="section-desc">Track your parts as you order. Progress is saved locally.</p>
+        </div>
+
+        <div class="shopping-tabs">
+            <button class="shopping-tab active" data-build="a">Build A</button>
+            <button class="shopping-tab" data-build="b">Build B</button>
+            <button class="shopping-tab" data-build="c">Build C</button>
+            <button class="shopping-tab" data-build="d">Build D</button>
+        </div>
+
+        <div class="shopping-list" id="shoppingList">
+            <!-- Populated by JS -->
+        </div>
+
+        <a href="#" class="btn btn-secondary shopping-cta" data-guide="shopping-lists">
+            <span>View All Shopping Lists</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </section>
+
+    <!-- Guide Modal/Reader -->
+    <div class="guide-reader" id="guideReader">
+        <div class="guide-reader-backdrop"></div>
+        <div class="guide-reader-container">
+            <header class="guide-reader-header">
+                <button class="guide-reader-close" id="guideReaderClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    <span>Close</span>
+                </button>
+                <h2 class="guide-reader-title" id="guideReaderTitle">Guide Title</h2>
+                <div class="guide-reader-actions">
+                    <button class="guide-action" id="guideToggleToc" title="Table of Contents">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="guide-reader-body">
+                <nav class="guide-toc" id="guideToc">
+                    <!-- Populated by JS -->
+                </nav>
+                <article class="guide-content-area" id="guideContent">
+                    <!-- Populated by JS -->
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                        <path d="M7 8l3 3-3 3"/>
+                    </svg>
+                </span>
+                <span>DIY Teleprompter Project</span>
+            </div>
+            <p class="footer-tagline">Build professional-grade teleprompters for a fraction of commercial prices.</p>
+            <div class="footer-links">
+                <a href="https://github.com" target="_blank">GitHub Repository</a>
+                <span class="footer-divider">|</span>
+                <a href="#guides" data-nav="guides">All Guides</a>
+                <span class="footer-divider">|</span>
+                <a href="#" data-guide="build-guide">Get Started</a>
+            </div>
+            <p class="footer-copy">Open source project. Not affiliated with Elgato or Raspberry Pi Foundation.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -10,33 +10,6 @@
     // Configuration
     // ============================================
 
-    const GUIDES = {
-        'build-guide': {
-            file: 'kb/build-guide.md',
-            title: 'Complete Build Guide'
-        },
-        'software-setup': {
-            file: 'kb/software-setup.md',
-            title: 'Software Setup Guide'
-        },
-        'raspberry-pi-displays': {
-            file: 'kb/raspberry-pi-displays.md',
-            title: 'Raspberry Pi Display Options'
-        },
-        'shopping-lists': {
-            file: 'kb/shopping-lists.md',
-            title: 'Shopping Lists by Budget'
-        },
-        '3d-printed-housings': {
-            file: 'kb/3d-printed-housings.md',
-            title: '3D Printed Housings'
-        },
-        'elgato-comparison': {
-            file: 'kb/elgato-comparison.md',
-            title: 'DIY vs Elgato Comparison'
-        }
-    };
-
     const SHOPPING_LISTS = {
         a: {
             name: 'Build A: Complete Housing',
@@ -96,12 +69,6 @@
     const nav = document.getElementById('nav');
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    const guideReader = document.getElementById('guideReader');
-    const guideReaderClose = document.getElementById('guideReaderClose');
-    const guideReaderTitle = document.getElementById('guideReaderTitle');
-    const guideContent = document.getElementById('guideContent');
-    const guideToc = document.getElementById('guideToc');
-    const guideToggleToc = document.getElementById('guideToggleToc');
     const shoppingList = document.getElementById('shoppingList');
     const prompterText = document.getElementById('prompterText');
 
@@ -192,156 +159,6 @@
 
     document.querySelectorAll('[data-count]').forEach(counter => {
         statObserver.observe(counter);
-    });
-
-    // ============================================
-    // Guide Reader
-    // ============================================
-
-    async function loadGuide(guideId, section = null) {
-        const guide = GUIDES[guideId];
-        if (!guide) {
-            console.error('Guide not found:', guideId);
-            return;
-        }
-
-        // Show reader
-        guideReader.classList.add('open');
-        document.body.classList.add('reader-open');
-        guideReaderTitle.textContent = guide.title;
-        guideContent.innerHTML = '<div class="loading">Loading guide...</div>';
-
-        try {
-            const response = await fetch(guide.file);
-            if (!response.ok) throw new Error('Failed to load guide');
-
-            const markdown = await response.text();
-            const html = marked.parse(markdown, {
-                breaks: true,
-                gfm: true
-            });
-
-            guideContent.innerHTML = html;
-
-            // Generate TOC
-            generateToc();
-
-            // Handle internal links
-            guideContent.querySelectorAll('a').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href.endsWith('.md')) {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const linkedGuide = href.replace('.md', '').replace('./', '');
-                        loadGuide(linkedGuide);
-                    });
-                }
-            });
-
-            // Scroll to section if specified
-            if (section) {
-                setTimeout(() => {
-                    const targetHeading = Array.from(guideContent.querySelectorAll('h2, h3')).find(h => {
-                        const id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                        return id.includes(section.toLowerCase());
-                    });
-                    if (targetHeading) {
-                        targetHeading.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }, 100);
-            }
-
-        } catch (error) {
-            console.error('Error loading guide:', error);
-            guideContent.innerHTML = `
-                <div class="error">
-                    <h2>Unable to load guide</h2>
-                    <p>Please make sure you're running this from a web server, not directly from the file system.</p>
-                    <p>Try: <code>python -m http.server 8000</code> in the docs folder.</p>
-                </div>
-            `;
-        }
-    }
-
-    function generateToc() {
-        const headings = guideContent.querySelectorAll('h2, h3');
-        const tocItems = [];
-
-        headings.forEach((heading, index) => {
-            const id = `heading-${index}`;
-            heading.id = id;
-
-            tocItems.push({
-                id,
-                text: heading.textContent,
-                level: heading.tagName.toLowerCase()
-            });
-        });
-
-        guideToc.innerHTML = `
-            <h4 class="guide-toc-title">Contents</h4>
-            <ul class="toc-list">
-                ${tocItems.map(item => `
-                    <li class="toc-item">
-                        <a href="#${item.id}" class="toc-link ${item.level}">${item.text}</a>
-                    </li>
-                `).join('')}
-            </ul>
-        `;
-
-        // TOC link clicks
-        guideToc.querySelectorAll('.toc-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.getElementById(link.getAttribute('href').slice(1));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                // Update active state
-                guideToc.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-
-                // On mobile, hide TOC after click
-                if (window.innerWidth <= 768) {
-                    guideToc.classList.remove('visible');
-                }
-            });
-        });
-    }
-
-    function closeGuideReader() {
-        guideReader.classList.remove('open');
-        document.body.classList.remove('reader-open');
-    }
-
-    // Guide reader events
-    guideReaderClose.addEventListener('click', closeGuideReader);
-
-    document.querySelector('.guide-reader-backdrop').addEventListener('click', closeGuideReader);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && guideReader.classList.contains('open')) {
-            closeGuideReader();
-        }
-    });
-
-    // TOC toggle
-    guideToggleToc.addEventListener('click', () => {
-        guideToc.classList.toggle('hidden');
-        if (window.innerWidth <= 768) {
-            guideToc.classList.toggle('visible');
-        }
-    });
-
-    // Guide link clicks
-    document.querySelectorAll('[data-guide]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const guideId = link.dataset.guide;
-            const section = link.dataset.section;
-            loadGuide(guideId, section);
-        });
     });
 
     // ============================================

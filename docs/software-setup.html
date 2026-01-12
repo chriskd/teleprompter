@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide | DIY Teleprompter</title>
+    <meta name="description" content="DIY Teleprompter build guide">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Guide page specific styles */
+        .guide-page {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .guide-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .guide-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .guide-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .guide-sidebar {
+                display: none;
+            }
+
+            .guide-sidebar.mobile-open {
+                display: block;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--bg-primary);
+                z-index: 100;
+                padding: 1.5rem;
+                max-height: none;
+                overflow-y: auto;
+            }
+        }
+
+        .guide-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .guide-sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+        }
+
+        .guide-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .guide-nav-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .guide-nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        .guide-nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .guide-nav-link.level-3 {
+            padding-left: 1.5rem;
+            font-size: 0.8125rem;
+        }
+
+        /* Main content */
+        .guide-main {
+            min-width: 0;
+        }
+
+        .guide-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .guide-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .guide-breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .guide-breadcrumb a:hover {
+            color: var(--accent-primary);
+        }
+
+        .guide-breadcrumb svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .guide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        @media (max-width: 768px) {
+            .guide-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Mobile TOC toggle */
+        .guide-toc-toggle {
+            display: none;
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4);
+            z-index: 99;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .guide-toc-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .guide-toc-toggle {
+                display: flex;
+            }
+        }
+
+        /* Guide content markdown styles */
+        .guide-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .guide-content h1 {
+            display: none; /* Hide first h1 since we show title in header */
+        }
+
+        .guide-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 3rem 0 1.5rem;
+            padding-top: 1rem;
+        }
+
+        .guide-content h2:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .guide-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .guide-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .guide-content p {
+            margin: 0 0 1rem;
+        }
+
+        .guide-content a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.15s ease;
+        }
+
+        .guide-content a:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .guide-content ul,
+        .guide-content ol {
+            margin: 0 0 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-content li::marker {
+            color: var(--accent-primary);
+        }
+
+        .guide-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875em;
+            background: var(--bg-elevated);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            color: var(--accent-secondary);
+        }
+
+        .guide-content pre {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            overflow-x: auto;
+            margin: 0 0 1.5rem;
+        }
+
+        .guide-content pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .guide-content blockquote {
+            margin: 0 0 1.5rem;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid var(--accent-primary);
+            background: var(--bg-elevated);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .guide-content blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        .guide-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 1.5rem;
+            font-size: 0.9375rem;
+        }
+
+        .guide-content th,
+        .guide-content td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .guide-content th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        .guide-content tr:hover td {
+            background: var(--bg-elevated);
+        }
+
+        .guide-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .guide-content hr {
+            border: none;
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 2rem 0;
+        }
+
+        /* Loading state */
+        .guide-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: var(--text-tertiary);
+        }
+
+        .guide-loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border-subtle);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.75rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error state */
+        .guide-error {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .guide-error h2 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Back link in nav */
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: auto;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.15s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-back svg {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scan line overlay for CRT effect -->
+    <div class="scanlines"></div>
+
+    <!-- Navigation -->
+    <nav class="nav scrolled" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                        <path d="M7 8l3 3-3 3"/>
+                    </svg>
+                </span>
+                <span class="logo-text">DIY<span class="logo-accent">Prompter</span></span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="navLinks">
+                <a href="index.html#builds" class="nav-link">Builds</a>
+                <a href="index.html#guides" class="nav-link">Guides</a>
+                <a href="index.html#comparison" class="nav-link">vs Elgato</a>
+                <a href="index.html#shopping" class="nav-link">Shopping</a>
+                <a href="https://github.com/chriskd/teleprompter" class="nav-link nav-link-external" target="_blank">
+                    GitHub
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Guide Page -->
+    <main class="guide-page">
+        <div class="guide-layout">
+            <!-- Sidebar TOC -->
+            <aside class="guide-sidebar" id="guideSidebar">
+                <div class="guide-sidebar-header">
+                    <span class="guide-sidebar-title">On This Page</span>
+                </div>
+                <nav class="guide-nav" id="guideNav">
+                    <!-- Populated by JS -->
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="guide-main">
+                <header class="guide-header">
+                    <div class="guide-breadcrumb">
+                        <a href="index.html">Home</a>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                        <span id="guideBreadcrumb">Guide</span>
+                    </div>
+                    <h1 class="guide-title" id="guideTitle">Loading...</h1>
+                </header>
+
+                <article class="guide-content" id="guideContent">
+                    <div class="guide-loading">Loading guide</div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile TOC Toggle -->
+    <button class="guide-toc-toggle" id="tocToggle" aria-label="Toggle table of contents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+        </svg>
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                        <path d="M7 8l3 3-3 3"/>
+                    </svg>
+                </span>
+                <span>DIY Teleprompter Project</span>
+            </div>
+            <p class="footer-tagline">Build professional-grade teleprompters for a fraction of commercial prices.</p>
+            <div class="footer-links">
+                <a href="https://github.com/chriskd/teleprompter" target="_blank">GitHub Repository</a>
+                <span class="footer-divider">|</span>
+                <a href="index.html#guides">All Guides</a>
+                <span class="footer-divider">|</span>
+                <a href="build-guide.html">Get Started</a>
+            </div>
+            <p class="footer-copy">Open source project. Not affiliated with Elgato or Raspberry Pi Foundation.</p>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // Guide configuration - maps URL to markdown file
+        const GUIDES = {
+            'build-guide': { file: 'kb/build-guide.md', title: 'Complete Build Guide' },
+            'software-setup': { file: 'kb/software-setup.md', title: 'Software Setup Guide' },
+            'raspberry-pi-displays': { file: 'kb/raspberry-pi-displays.md', title: 'Raspberry Pi Display Options' },
+            'shopping-lists': { file: 'kb/shopping-lists.md', title: 'Shopping Lists by Budget' },
+            '3d-printed-housings': { file: 'kb/3d-printed-housings.md', title: '3D Printed Housings' },
+            'elgato-comparison': { file: 'kb/elgato-comparison.md', title: 'DIY vs Elgato Comparison' }
+        };
+
+        // Get guide ID from URL
+        const path = window.location.pathname;
+        const filename = path.split('/').pop().replace('.html', '');
+        const guide = GUIDES[filename];
+
+        if (!guide) {
+            document.getElementById('guideTitle').textContent = 'Guide Not Found';
+            document.getElementById('guideContent').innerHTML = `
+                <div class="guide-error">
+                    <h2>Guide not found</h2>
+                    <p>The requested guide could not be found.</p>
+                    <p><a href="index.html">Return to home</a></p>
+                </div>
+            `;
+            return;
+        }
+
+        // Update page metadata
+        document.title = guide.title + ' | DIY Teleprompter';
+        document.getElementById('guideTitle').textContent = guide.title;
+        document.getElementById('guideBreadcrumb').textContent = guide.title;
+
+        // Load and render markdown
+        async function loadGuide() {
+            try {
+                const response = await fetch(guide.file);
+                if (!response.ok) throw new Error('Failed to load guide');
+
+                const markdown = await response.text();
+                const html = marked.parse(markdown, { breaks: true, gfm: true });
+
+                document.getElementById('guideContent').innerHTML = html;
+
+                // Generate TOC
+                generateToc();
+
+                // Handle hash navigation
+                if (window.location.hash) {
+                    setTimeout(() => {
+                        const target = document.getElementById(window.location.hash.slice(1));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 100);
+                }
+
+            } catch (error) {
+                console.error('Error loading guide:', error);
+                document.getElementById('guideContent').innerHTML = `
+                    <div class="guide-error">
+                        <h2>Unable to load guide</h2>
+                        <p>There was an error loading this guide. Please try again later.</p>
+                        <p><a href="index.html">Return to home</a></p>
+                    </div>
+                `;
+            }
+        }
+
+        function generateToc() {
+            const content = document.getElementById('guideContent');
+            const nav = document.getElementById('guideNav');
+            const headings = content.querySelectorAll('h2, h3');
+
+            const links = [];
+            headings.forEach((heading, index) => {
+                // Create ID for heading
+                const id = heading.textContent
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/(^-|-$)/g, '');
+                heading.id = id;
+
+                const level = heading.tagName.toLowerCase();
+                links.push(`
+                    <a href="#${id}" class="guide-nav-link level-${level.charAt(1)}" data-id="${id}">
+                        ${heading.textContent}
+                    </a>
+                `);
+            });
+
+            nav.innerHTML = links.join('');
+
+            // Click handlers for TOC links
+            nav.querySelectorAll('.guide-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = link.dataset.id;
+                    const target = document.getElementById(id);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                        history.pushState(null, '', '#' + id);
+                    }
+
+                    // Close mobile sidebar
+                    document.getElementById('guideSidebar').classList.remove('mobile-open');
+                });
+            });
+
+            // Scroll spy for active state
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        nav.querySelectorAll('.guide-nav-link').forEach(l => l.classList.remove('active'));
+                        const link = nav.querySelector(`[data-id="${entry.target.id}"]`);
+                        if (link) link.classList.add('active');
+                    }
+                });
+            }, { rootMargin: '-100px 0px -66%' });
+
+            headings.forEach(h => observer.observe(h));
+        }
+
+        // Mobile TOC toggle
+        document.getElementById('tocToggle').addEventListener('click', () => {
+            document.getElementById('guideSidebar').classList.toggle('mobile-open');
+        });
+
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('open');
+            document.getElementById('navToggle').classList.toggle('active');
+        });
+
+        // Load the guide
+        loadGuide();
+    })();
+    </script>
+</body>
+</html>
